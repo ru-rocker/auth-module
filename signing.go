@@ -1,4 +1,4 @@
-package auth_module
+package authmodule
 
 import "github.com/SermoDigital/jose/crypto"
 
