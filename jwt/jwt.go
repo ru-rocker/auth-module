@@ -60,12 +60,19 @@ func Serialized(auth Auth, key []byte, method authmodule.SigningMethod) ([]byte,
 }
 
 // parse auth token with leeway for validating expired and/or not before duration
-func Parse(authToken []byte, expLeeway time.Duration, nbfLeeway time.Duration) (Auth, error) {
-	jwt, err := jws.ParseJWT([]byte(authToken))
+func Parse(authToken []byte, key []byte, method authmodule.SigningMethod,
+	expLeeway time.Duration, nbfLeeway time.Duration) (Auth, error) {
 	auth := Auth{}
+	jwt, err := jws.ParseJWT([]byte(authToken))
 	if err != nil {
 		return auth, err
 	}
+
+	err = jwt.Validate(key, method)
+	if err != nil {
+		return auth, err
+	}
+
 	c := jwt.Claims()
 	err = c.Validate(time.Now(), expLeeway, nbfLeeway)
 	if err != nil {

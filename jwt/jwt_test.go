@@ -21,6 +21,6 @@ var auth = Auth{
 func TestSerialized(t *testing.T) {
 	c, _ := Serialized(auth, []byte("ru-rockker"), authmodule.SigningMethodHS384)
 	println(string(c))
-	j, _ := Parse(c, time.Second, time.Second)
+	j, _ := Parse(c, []byte("ru-rockker"), authmodule.SigningMethodHS384, time.Second, time.Second)
 	pretty.Print(j)
 }
